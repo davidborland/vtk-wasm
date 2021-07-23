@@ -1,14 +1,20 @@
 # Get the base image
 FROM dockcross/web-wasm:20200416-a6b6635
 
+# Last vtk commit that worked with wasm
+ARG COMMIT=11fbec70^
+
 # Create and set working directory
 RUN mkdir -p /src
 WORKDIR /src
 
-# Get and build vtk, using last commit that worked with wasm
+# Set environment variable with vtk directory
+ENV VTK_BUILD_DIR=/src/vtk-build
+
+# Get and build vtk
 RUN git clone https://gitlab.kitware.com/vtk/vtk.git && \
   cd vtk && \
-  git checkout 11fbec70^ && \
+  git checkout ${COMMIT} && \
   git submodule update --init --recursive && \
   cd .. && \
   mkdir vtk-build && \
